@@ -1,4 +1,4 @@
-// cSpell:ignore framer, lucide
+// cSpell:ignore framer lucide Aadhaar
 'use client';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

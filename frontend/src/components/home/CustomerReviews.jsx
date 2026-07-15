@@ -1,4 +1,4 @@
-// cSpell:ignore framer, lucide
+// cSpell:ignore framer lucide Rohit Sharma Ananya Vikram Malhotra Aditya Pooja Hegde Kabir Mehta Spiti
 'use client';
 import { useRef } from 'react';
 import { motion } from 'framer-motion';

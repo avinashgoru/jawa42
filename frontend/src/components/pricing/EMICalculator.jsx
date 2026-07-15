@@ -25,7 +25,7 @@ export default function EMICalculator() {
         const popular = variants.find(v => v.isPopular) || variants[0];
         setSelectedVariantId(popular.id);
         setExShowroomPrice(popular.price);
-        // Default downpayment to 20%
+        // Default down payment to 20%
         setDownPayment(Math.round(popular.price * 0.2));
       } else {
         setSelectedVariantId('');
