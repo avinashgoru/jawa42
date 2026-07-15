@@ -1,6 +1,4 @@
 // cSpell:ignore Jawa, Yezdi
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 import ModelRange from "@/components/home/ModelRange";
 
 export const metadata = {
@@ -10,12 +8,8 @@ export const metadata = {
 
 export default function ModelsPage() {
   return (
-    <main className="bg-primary min-h-screen">
-      <Navigation />
-      <div className="pt-20">
-        <ModelRange />
-      </div>
-      <Footer />
+    <main className="bg-primary min-h-screen pt-20">
+      <ModelRange />
     </main>
   );
 }

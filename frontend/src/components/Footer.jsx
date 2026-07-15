@@ -67,7 +67,7 @@ export default function Footer() {
           <div>
             <h4 className="font-heading text-xs tracking-widest text-white mb-8 uppercase font-bold">Ownership</h4>
             <ul className="flex flex-col gap-4 text-gray-400 text-sm font-light">
-              <li><a href="#" className="hover:text-white transition-colors">Find a Dealer</a></li>
+              <li><Link href="/dealers" className="hover:text-white transition-colors">Find a Dealer</Link></li>
               <li><a href="#" className="hover:text-white transition-colors">Book Service</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Accessories</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
