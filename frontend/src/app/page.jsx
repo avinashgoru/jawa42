@@ -3,6 +3,8 @@ import EnginePerformance from '@/components/home/EnginePerformance';
 import DesignHighlights from '@/components/home/DesignHighlights';
 import StoryTelling from '@/components/home/StoryTelling';
 import ModelRange from '@/components/home/ModelRange';
+import CustomerReviews from '@/components/home/CustomerReviews';
+import FAQ from '@/components/home/FAQ';
 import CallToAction from '@/components/home/CallToAction';
 
 export default function Home() {
@@ -13,6 +15,8 @@ export default function Home() {
       <EnginePerformance />
       <DesignHighlights />
       <ModelRange />
+      <CustomerReviews />
+      <FAQ />
       <CallToAction />
     </div>
   );
