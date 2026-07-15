@@ -1,6 +1,7 @@
 // cSpell:ignore JAWA
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -23,6 +24,13 @@ export default function Navigation() {
     setIsOpen(false);
   }
 
+  const handleLogoClick = (e) => {
+    if (pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const links = [
     { name: 'Models', path: '/models' },
     { name: 'Gallery', path: '/gallery' },
@@ -37,10 +45,15 @@ export default function Navigation() {
         <div className="px-6 flex justify-between items-center">
         
         {/* Premium Minimal Branding */}
-        <Link href="/" className="flex items-center group relative z-50">
-          <span className="font-heading text-xl font-extrabold tracking-[0.2em] text-white uppercase group-hover:opacity-80 transition-opacity duration-300">
-            JAWA
-          </span>
+        <Link href="/" onClick={handleLogoClick} className="flex items-center group relative z-50">
+          <Image
+            src="/jawa-logo.svg"
+            alt="Jawa Logo"
+            width={78}
+            height={44}
+            priority
+            className="h-[32px] md:h-[38px] lg:h-[42px] w-auto object-contain transition-all duration-300 group-hover:opacity-90"
+          />
         </Link>
         
         {/* Compact Navigation */}
