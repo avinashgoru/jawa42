@@ -9,7 +9,7 @@ export default function StoryTelling() {
         <div className="absolute inset-0 bg-black/60 z-10" />
         <div 
           className="absolute inset-0 -z-10 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-front-three-quarter-24.png?isig=0&q=100')" }}
+          style={{ backgroundImage: "url('https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-front-three-quarter-24.png?isig=0&q=80')" }}
         />
       </div>
 

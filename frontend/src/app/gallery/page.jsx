@@ -6,15 +6,15 @@ import Image from 'next/image';
 import { X, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 
 const galleryData = [
-  { category: "Jawa 42", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-side-view-2.png?isig=0&q=100", aspect: "aspect-[16/9]" },
-  { category: "Bobber", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-left-side-view-11.png?isig=0&q=100", aspect: "aspect-[16/9]" },
-  { category: "Perak", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-front-three-quarter-23.png?isig=0&q=100", aspect: "aspect-[16/9]" },
-  { category: "Bobber", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-side-view-2.png?isig=0&q=100", aspect: "aspect-[16/9]" },
-  { category: "Jawa 42", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-left-side-view-11.png?isig=0&q=100", aspect: "aspect-[4/3]" }, // simulated varied aspect
-  { category: "Jawa 350", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-left-rear-three-quarter-2.png?isig=0&q=100", aspect: "aspect-[16/9]" },
-  { category: "Yezdi", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-2024-fuel-tank-17.jpeg?isig=0&q=100", aspect: "aspect-[3/4]" }, // simulated portrait
-  { category: "Yezdi", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-seat-3.png?isig=0&q=100", aspect: "aspect-[16/9]" },
-  { category: "Yezdi", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-rear-view-2.png?isig=0&q=100", aspect: "aspect-[16/9]" }
+  { category: "Jawa 42", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-side-view-2.png?isig=0&q=80", aspect: "aspect-[16/9]" },
+  { category: "Bobber", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-left-side-view-11.png?isig=0&q=80", aspect: "aspect-[16/9]" },
+  { category: "Perak", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-front-three-quarter-23.png?isig=0&q=80", aspect: "aspect-[16/9]" },
+  { category: "Bobber", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-side-view-2.png?isig=0&q=80", aspect: "aspect-[16/9]" },
+  { category: "Jawa 42", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-left-side-view-11.png?isig=0&q=80", aspect: "aspect-[4/3]" }, // simulated varied aspect
+  { category: "Jawa 350", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-left-rear-three-quarter-2.png?isig=0&q=80", aspect: "aspect-[16/9]" },
+  { category: "Yezdi", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-2024-fuel-tank-17.jpeg?isig=0&q=80", aspect: "aspect-[3/4]" }, // simulated portrait
+  { category: "Yezdi", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-seat-3.png?isig=0&q=80", aspect: "aspect-[16/9]" },
+  { category: "Yezdi", src: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-rear-view-2.png?isig=0&q=80", aspect: "aspect-[16/9]" }
 ];
 
 const categories = ["All Models", "Jawa 42", "Jawa 42 Bobber", "Jawa Perak", "Jawa 350", "Yezdi"];

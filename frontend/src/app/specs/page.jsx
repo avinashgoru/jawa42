@@ -89,7 +89,7 @@ export default function Specifications() {
           <div className="w-full lg:w-5/12 lg:sticky lg:top-32 h-[50vh] lg:h-[70vh] flex items-center justify-center rounded-3xl overflow-hidden glass-1 border border-white/5 relative group">
             <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-transparent to-transparent z-10 pointer-events-none" />
             <img 
-              src="https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-front-three-quarter-23.png?isig=0&q=100" 
+              src="https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-front-three-quarter-23.png?isig=0&q=80" 
               alt="Jawa 42 Bobber Engineering" 
               className="w-full h-full object-cover md:object-contain object-center opacity-80 group-hover:scale-105 transition-transform duration-1000 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] mix-blend-lighten"
             />

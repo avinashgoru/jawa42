@@ -19,7 +19,7 @@ export default function CinematicHero() {
         >
           <div className="relative w-full max-w-[90%] lg:max-w-full h-[50vh] lg:h-[75vh]">
             <Image 
-              src="https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-side-view-2.png?isig=0&q=100" 
+              src="https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-side-view-2.png?isig=0&q=80" 
               alt="Jawa 42 Profile" 
               fill
               priority

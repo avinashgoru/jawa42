@@ -7,7 +7,7 @@ import { motorcycleModels } from '@/data/models';
 
 const jawa42Base = motorcycleModels.find(m => m.id === 'jawa-42') || {
   name: "Jawa 42",
-  image: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-side-view-2.png?isig=0&q=100"
+  image: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-side-view-2.png?isig=0&q=80"
 };
 
 const jawa42Specs = {

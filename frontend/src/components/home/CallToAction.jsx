@@ -10,7 +10,7 @@ export default function CallToAction() {
       {/* Background */}
       <div className="absolute inset-0 z-0">
         <Image 
-          src="https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-side-view-2.png?isig=0&q=100" 
+          src="https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-side-view-2.png?isig=0&q=80" 
           alt="Jawa 42" 
           fill
           sizes="100vw"

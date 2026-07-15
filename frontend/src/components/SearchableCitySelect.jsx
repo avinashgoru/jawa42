@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { indianCities } from '../data/cities';
 
@@ -7,9 +7,12 @@ export default function SearchableCitySelect({ value, onChange, disabled }) {
   const [searchQuery, setSearchQuery] = useState('');
   const wrapperRef = useRef(null);
 
-  const filteredCities = indianCities.filter(city =>
-    city.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredCities = useMemo(() => {
+    const query = searchQuery.toLowerCase();
+    return indianCities.filter(city =>
+      city.toLowerCase().includes(query)
+    );
+  }, [searchQuery]);
 
   useEffect(() => {
     function handleClickOutside(event) {

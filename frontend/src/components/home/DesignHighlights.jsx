@@ -7,17 +7,17 @@ const features = [
   {
     title: "Signature Jawa Design",
     description: "The unmistakable silhouette, teardrop tank, and classic proportions pay homage to our legendary heritage while embracing modern aerodynamics.",
-    image: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-2024-fuel-tank-17.jpeg?isig=0&q=100"
+    image: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-2024-fuel-tank-17.jpeg?isig=0&q=80"
   },
   {
     title: "Refined Comfort",
     description: "A meticulously crafted seat with premium stitching ensures supreme comfort on any terrain, engineered for long rides without fatigue.",
-    image: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-seat-3.png?isig=0&q=100"
+    image: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-seat-3.png?isig=0&q=80"
   },
   {
     title: "Premium Finish",
     description: "Striking graphics and legendary tank decals seamlessly merge the iconic Jawa soul with contemporary street presence.",
-    image: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-2024-branding-fuel-tank-decal.jpeg?isig=0&q=100"
+    image: "https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-2024-branding-fuel-tank-decal.jpeg?isig=0&q=80"
   }
 ];
 

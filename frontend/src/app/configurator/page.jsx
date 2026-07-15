@@ -10,10 +10,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Download, Share2, Sun, Moon, Info } from 'lucide-react';
 
 const colorImages = {
-  '#C41E3A': 'https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-side-view-2.png?isig=0&q=100', // Red
-  '#2A2A2A': 'https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-left-side-view-11.png?isig=0&q=100', // Grey
-  '#1B3B2B': 'https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-front-three-quarter-23.png?isig=0&q=100', // Green
-  '#EEEEEE': 'https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-rear-view.png?isig=0&q=100', // White
+  '#C41E3A': 'https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-side-view-2.png?isig=0&q=80', // Red
+  '#2A2A2A': 'https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-left-side-view-11.png?isig=0&q=80', // Grey
+  '#1B3B2B': 'https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-right-front-three-quarter-23.png?isig=0&q=80', // Green
+  '#EEEEEE': 'https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-rear-view.png?isig=0&q=80', // White
 };
 
 export default function Configurator() {

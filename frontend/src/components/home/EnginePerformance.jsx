@@ -29,7 +29,7 @@ const AnimatedCounter = ({ end, suffix = "", duration = 2 }) => {
 export default function EnginePerformance() {
   return (
     <section className="bg-secondary py-32 border-t border-white/5 relative overflow-hidden" id="explore">
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-[url('https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-rear-view-2.png?isig=0&q=100')] bg-cover bg-center opacity-10 mix-blend-luminosity"></div>
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-[url('https://imgd.aeplcdn.com/1280x720/n/cw/ec/184473/42-rear-view-2.png?isig=0&q=80')] bg-cover bg-center opacity-10 mix-blend-luminosity"></div>
       
       <div className="container mx-auto px-6 relative z-10">
         <motion.div 
