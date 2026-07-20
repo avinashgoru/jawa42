@@ -4,8 +4,21 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock, Search, Map, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useLocationStore } from '@/store/useLocationStore';
 import { dealers } from '@/data/dealers';
+
+const DealerMap = dynamic(() => import('@/components/dealers/DealerMap'), { 
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full min-h-[400px] rounded-3xl border border-white/10 flex items-center justify-center bg-black/50">
+      <div className="animate-pulse flex flex-col items-center">
+        <MapPin className="w-8 h-8 text-accent mb-4 animate-bounce" />
+        <p className="text-gray-400 font-heading text-sm uppercase tracking-widest">Loading Map...</p>
+      </div>
+    </div>
+  )
+});
 
 const stateCityMap = {
   "Maharashtra": ["Mumbai", "Pune"],
@@ -31,24 +44,22 @@ export default function DealersLocator() {
   // Dynamic cities based on state
   const availableCities = selectedState ? stateCityMap[selectedState] : [];
 
-  // Initialize filters based on location store
+  // Initialize filters based on location store — run once on mount only
   useEffect(() => {
     if (city) {
-      const foundState = Object.keys(stateCityMap).find(state => 
-        stateCityMap[state].some(c => c.toLowerCase() === city.toLowerCase())
+      const foundState = Object.keys(stateCityMap).find((state) =>
+        stateCityMap[state].some((c) => c.toLowerCase() === city.toLowerCase()),
       );
-      if (foundState) {
-        setSelectedState(foundState);
-      }
+      if (foundState) setSelectedState(foundState);
       setSelectedCity(city);
-      
-      const results = dealers.filter(d => d.city.toLowerCase() === city.toLowerCase());
-      setFilteredDealers(results);
+      setFilteredDealers(dealers.filter((d) => d.city.toLowerCase() === city.toLowerCase()));
       setHasSearched(true);
     } else {
       setFilteredDealers(dealers);
+      setHasSearched(false);
     }
-  }, [city]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Handle state change
   const handleStateChange = (state) => {
@@ -167,33 +178,9 @@ export default function DealersLocator() {
           {/* Right Side: Map & Cards Panel */}
           <div className="lg:col-span-8 space-y-8">
             
-            {/* Map Placeholder Card */}
-            <div className="glass-3 rounded-3xl border border-white/10 h-[300px] md:h-[400px] overflow-hidden relative flex flex-col items-center justify-center text-center p-6 group">
-              {/* Map grid aesthetic */}
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(196,30,58,0.1),rgba(0,0,0,0))]" />
-              <div 
-                className="absolute inset-0 opacity-[0.03] pointer-events-none" 
-                style={{
-                  backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
-                  backgroundSize: '24px 24px'
-                }}
-              />
-              
-              {/* Map marker pulsing anim */}
-              <div className="relative mb-6 z-10 flex items-center justify-center">
-                <span className="animate-ping absolute inline-flex h-12 w-12 rounded-full bg-accent/20 opacity-75" />
-                <div className="w-16 h-16 rounded-full bg-black/60 border border-accent/30 flex items-center justify-center shadow-lg relative z-20">
-                  <MapPin className="w-7 h-7 text-accent" />
-                </div>
-              </div>
-
-              {/* Title & Sub */}
-              <h3 className="text-xl font-heading font-extrabold text-white uppercase tracking-widest mb-2 z-10">
-                Interactive Map Integration
-              </h3>
-              <p className="text-gray-400 text-sm font-light max-w-sm z-10">
-                Interactive Map Integration Coming Soon. Showing dealer listings for region.
-              </p>
+            {/* Interactive Map */}
+            <div className="h-[300px] md:h-[400px]">
+              <DealerMap filteredDealers={filteredDealers} />
             </div>
 
             {/* Dealer Information Panel */}
@@ -241,10 +228,15 @@ export default function DealersLocator() {
                         </div>
 
                         <div className="flex gap-3 border-t border-white/5 pt-5 mt-auto">
-                          <button className="flex-1 bg-white/5 hover:bg-white/10 text-white py-3 rounded-lg font-heading font-bold uppercase tracking-widest text-[9px] transition-colors border border-white/5 flex items-center justify-center gap-1">
+                          <a
+                            href={`https://www.google.com/maps/dir/?api=1&destination=${dealer.lat},${dealer.lng}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 bg-white/5 hover:bg-white/10 text-white py-3 rounded-lg font-heading font-bold uppercase tracking-widest text-[9px] transition-colors border border-white/5 flex items-center justify-center gap-1"
+                          >
                             Get Directions
-                            <ExternalLink className="w-2.5 h-2.5" />
-                          </button>
+                            <ExternalLink className="w-2.5 h-2.5" aria-hidden />
+                          </a>
                           
                           <Link
                             href="/book"

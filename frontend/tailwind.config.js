@@ -1,26 +1,28 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    './src/components/**/*.{js,jsx,mdx}',
+    './src/app/**/*.{js,jsx,mdx}',
   ],
   theme: {
     extend: {
       colors: {
-        primary: "#000000",
-        secondary: "#111111",
-        tertiary: "#1a1a1a",
-        accent: "#C41E3A",
-        "accent-hover": "#A01830",
+        primary: '#0A0A0A',
+        secondary: '#111111',
+        surface: '#1A1A1A',
+        border: '#2A2A2A',
+        accent: '#B5121B',
+        'accent-hover': '#D61C29',
+        'text-sec': '#B3B3B3',
       },
       fontFamily: {
-        heading: ['Outfit', 'sans-serif'],
-        body: ['Inter', 'sans-serif'],
+        heading: ['Satoshi', 'sans-serif'],
+        body: ['var(--font-inter)', 'sans-serif'],
+        specs: ['var(--font-space-grotesk)', 'sans-serif'],
       },
       letterSpacing: {
-        widest: '0.1em',
-      }
+        widest: '0.15em',
+      },
     },
   },
   plugins: [],

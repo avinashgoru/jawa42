@@ -55,18 +55,16 @@ export default function FAQ() {
   };
 
   return (
-    <section className="bg-[#030303] py-24 border-t border-white/5 relative z-10" id="faq">
+    <section className="bg-primary py-32 border-t border-border relative z-10" id="faq">
       <div className="container mx-auto px-6 max-w-4xl">
         
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-accent font-heading font-semibold tracking-[0.3em] uppercase text-[10px] mb-4 flex items-center justify-center gap-4">
-            <span className="w-8 h-[1px] bg-accent"></span> Support <span className="w-8 h-[1px] bg-accent"></span>
-          </h2>
-          <h3 className="text-5xl font-heading font-extrabold text-white uppercase tracking-widest mb-6">
-            Frequently Asked Questions
+        <div className="text-center max-w-3xl mx-auto mb-20">
+          <span className="text-[10px] font-bold text-accent tracking-[0.3em] uppercase block mb-4">SUPPORT</span>
+          <h3 className="text-4xl md:text-5xl font-heading font-black text-white uppercase tracking-tight mb-6">
+            FREQUENTLY ASKED QUESTIONS
           </h3>
-          <p className="text-gray-400 text-lg leading-relaxed font-light">
+          <p className="text-sm md:text-base text-text-sec font-body font-light leading-relaxed">
             Everything you need to know about ownership, performance, specs, and booking a test ride.
           </p>
         </div>
@@ -78,7 +76,7 @@ export default function FAQ() {
             return (
               <div 
                 key={faq.id}
-                className="glass-1 rounded-2xl border border-white/5 overflow-hidden transition-all duration-300"
+                className="bg-surface border border-border rounded-2xl overflow-hidden transition-all duration-300"
               >
                 {/* Accordion Header */}
                 <button
@@ -89,12 +87,12 @@ export default function FAQ() {
                       toggleFAQ(faq.id);
                     }
                   }}
-                  className="w-full flex justify-between items-center px-6 py-5 text-left text-white outline-none focus:bg-white/[0.02]"
+                  className="w-full flex justify-between items-center px-8 py-6 text-left text-white outline-none focus:bg-white/[0.01]"
                   aria-expanded={isOpen}
                   aria-controls={`faq-content-${faq.id}`}
                   id={`faq-header-${faq.id}`}
                 >
-                  <span className="font-heading font-bold text-sm tracking-wide md:text-base uppercase">
+                  <span className="font-heading font-bold text-sm md:text-base uppercase tracking-wide">
                     {faq.question}
                   </span>
                   <motion.div
@@ -118,7 +116,7 @@ export default function FAQ() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                     >
-                      <div className="px-6 pb-6 pt-2 text-gray-400 text-sm leading-relaxed border-t border-white/5 bg-black/20">
+                      <div className="px-8 pb-6 pt-2 text-text-sec font-body font-light text-sm leading-relaxed border-t border-border bg-black/10">
                         {faq.answer}
                       </div>
                     </motion.div>

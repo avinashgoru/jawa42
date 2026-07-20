@@ -1,67 +1,99 @@
-/* stylelint-disable */
-/* cSpell:ignore Glassmorphism */
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
   --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 0, 0, 0;
-  --background-end-rgb: 0, 0, 0;
+  --background-rgb: 10, 10, 10;
+  --color-primary: #0a0a0a;
+  --color-surface: #1a1a1a;
+  --color-border: #2a2a2a;
+  --color-accent: #b5121b;
+  --color-text-sec: #b3b3b3;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-start-rgb));
+  background: rgb(var(--background-rgb));
   font-family: var(--font-inter), sans-serif;
   overflow-x: hidden;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-outfit), sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Satoshi, sans-serif;
 }
 
-/* Custom Scrollbar for premium feel */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
+
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: var(--color-primary);
 }
+
 ::-webkit-scrollbar-thumb {
-  background: #333333;
-  border-radius: 4px;
+  background: var(--color-border);
+  border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: #C41E3A;
+  background: var(--color-accent);
 }
 
-/* Glassmorphism */
+/* Named utility for components that need a styled scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
 @layer utilities {
-  /* Premium Dark-Mode Glassmorphism System */
   .glass-1 {
-    @apply bg-white/[0.03] border border-white/[0.08] backdrop-blur-[6px] shadow-[0_4px_30px_rgba(0,0,0,0.1)];
+    @apply bg-[#1A1A1A]/80 border border-white/[0.05] backdrop-blur-xl shadow-2xl;
   }
-  
   .glass-2 {
-    @apply bg-white/[0.05] border border-white/[0.12] backdrop-blur-[8px] shadow-[0_8px_32px_rgba(0,0,0,0.2)];
+    @apply bg-[#111111]/90 border border-white/[0.08] backdrop-blur-2xl shadow-2xl;
   }
-  
   .glass-3 {
-    @apply bg-white/[0.06] border border-white/[0.15] backdrop-blur-[10px] shadow-[0_12px_40px_rgba(0,0,0,0.3)];
+    @apply bg-[#0D0D0D]/95 border border-white/[0.06] backdrop-blur-2xl shadow-2xl;
   }
 }
 
-.glass {
-  background: rgba(17, 17, 17, 0.6);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-.text-gradient {
-  background: linear-gradient(to right, #ffffff, #888888);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }

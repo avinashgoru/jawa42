@@ -16,21 +16,22 @@ export default function Pricing() {
   const variants = jawa42?.variants || [];
 
   return (
-    <div className="pt-32 pb-20 min-h-screen bg-primary">
-      <div className="container mx-auto px-6 text-center">
+    <div className="pt-40 pb-32 min-h-screen bg-primary">
+      <div className="container mx-auto px-6 text-center max-w-7xl">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h1 className="text-5xl font-heading font-bold uppercase tracking-widest mb-6 text-white">Select Your Ride</h1>
-          <p className="text-gray-400 max-w-2xl mx-auto mb-10 text-lg">
+          <span className="text-[10px] font-bold text-accent tracking-[0.3em] uppercase block mb-4">PRICING</span>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-black uppercase tracking-tight text-white mb-6">SELECT YOUR RIDE</h1>
+          <p className="text-sm md:text-base text-text-sec font-body font-light max-w-xl mx-auto mb-10 leading-relaxed">
             Choose the variant that matches your distinctive style and performance needs. Prices dynamically update based on your selected city.
           </p>
 
           {/* City Selector */}
-          <div className="max-w-md mx-auto mb-16 relative z-50 text-left">
-            <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2 font-bold ml-1">Select City for On-Road Estimate</label>
+          <div className="max-w-md mx-auto mb-20 relative z-50 text-left">
+            <label className="block text-[10px] font-specs font-bold uppercase tracking-widest text-[#B3B3B3] mb-3 ml-1">SELECT CITY FOR ESTIMATE</label>
             <SearchableCitySelect 
               value={city} 
               onChange={(selectedCity) => setCity(selectedCity)} 
@@ -49,55 +50,55 @@ export default function Pricing() {
                 key={variant.id}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 + (index * 0.2) }}
-                className={`flex flex-col items-center p-10 rounded-3xl transition-all duration-500 group ${
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 + (index * 0.15) }}
+                className={`flex flex-col items-center p-8 rounded-3xl transition-all duration-500 group ${
                   isPopular 
-                  ? 'glass-3 relative transform lg:-translate-y-6 shadow-[0_0_50px_rgba(196,30,58,0.15)] hover:shadow-[0_0_70px_rgba(196,30,58,0.25)] border-t border-accent/50 z-10' 
-                  : 'glass-1 hover:bg-white/[0.05]'
+                  ? 'bg-surface relative transform lg:-translate-y-4 border border-accent/20 shadow-[0_10px_30px_rgba(181,18,27,0.06)] z-10' 
+                  : 'bg-surface border border-border hover:border-accent/20'
                 }`}
               >
-                <div className={`relative h-48 mb-6 rounded-xl overflow-hidden p-4 group w-full ${isPopular ? 'bg-gradient-to-t from-accent/20 to-transparent border border-accent/20 shadow-[0_0_30px_rgba(206,161,106,0.15)] h-56' : 'bg-gradient-to-t from-black/50 to-transparent'}`}>
-                  {isPopular && <div className="absolute top-2 right-2 bg-accent text-white text-[9px] uppercase tracking-widest font-bold px-3 py-1 rounded-full z-10">Popular</div>}
+                <div className={`relative h-48 mb-6 rounded-2xl overflow-hidden p-4 group w-full ${isPopular ? 'bg-gradient-to-t from-accent/10 to-transparent border border-accent/10 shadow-[0_0_30px_rgba(206,161,106,0.15)] h-56' : 'bg-gradient-to-t from-primary/50 to-transparent border border-border/50'}`}>
+                  {isPopular && <div className="absolute top-3 right-3 bg-accent text-white text-[9px] uppercase tracking-widest font-black px-3 py-1.5 rounded-full z-10">Popular</div>}
                   <Image 
                     src={jawa42.image} 
                     alt={variant.name} 
                     fill 
                     sizes="(max-width: 768px) 100vw, 33vw" 
-                    className={`object-contain transition-all duration-500 ${isPopular ? 'drop-shadow-2xl group-hover:scale-110' : 'drop-shadow-lg opacity-70 group-hover:opacity-100 group-hover:scale-105'}`} 
+                    className={`object-contain transition-all duration-700 ease-out ${isPopular ? 'drop-shadow-2xl group-hover:scale-105' : 'drop-shadow-lg opacity-70 group-hover:opacity-100 group-hover:scale-[1.02]'}`} 
                   />
                 </div>
                 
-                <h2 className={`font-heading font-extrabold mb-1 uppercase tracking-widest text-white ${isPopular ? 'text-3xl' : 'text-2xl'}`}>{variant.name}</h2>
-                <p className={`mb-8 uppercase tracking-[0.2em] text-[10px] font-bold ${isPopular ? 'text-accent' : 'text-gray-500'}`}>{variant.description}</p>
+                <h2 className="font-heading font-extrabold mb-1 uppercase tracking-wider text-white text-2xl">{variant.name}</h2>
+                <p className={`mb-8 uppercase tracking-[0.2em] text-[10px] font-bold ${isPopular ? 'text-accent' : 'text-text-sec'}`}>{variant.description}</p>
                 
                 {/* Detailed Pricing Block */}
-                <div className="w-full bg-black/40 border border-white/10 rounded-xl p-4 mb-8 text-left">
-                  <div className="flex justify-between items-center mb-2 pb-2 border-b border-white/5">
-                    <span className="text-[10px] text-gray-400 uppercase tracking-widest">Ex-Showroom</span>
-                    <span className="text-sm font-bold text-white">{formatCurrency(pricing.exShowroom)}</span>
+                <div className="w-full bg-primary border border-border rounded-2xl p-5 mb-8 text-left">
+                  <div className="flex justify-between items-center mb-2 pb-2 border-b border-border">
+                    <span className="text-[10px] text-text-sec font-bold tracking-widest uppercase">Ex-Showroom</span>
+                    <span className="text-sm font-specs font-bold text-white">{formatCurrency(pricing.exShowroom)}</span>
                   </div>
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-[9px] text-gray-500 uppercase tracking-widest">RTO (Est.)</span>
-                    <span className="text-[10px] text-gray-300">{formatCurrency(pricing.rto)}</span>
+                  <div className="flex justify-between items-center mb-1.5 text-xs text-text-sec font-specs font-bold">
+                    <span>RTO (Est.)</span>
+                    <span>{formatCurrency(pricing.rto)}</span>
                   </div>
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-[9px] text-gray-500 uppercase tracking-widest">Insurance (Est.)</span>
-                    <span className="text-[10px] text-gray-300">{formatCurrency(pricing.insurance)}</span>
+                  <div className="flex justify-between items-center mb-1.5 text-xs text-text-sec font-specs font-bold">
+                    <span>Insurance (Est.)</span>
+                    <span>{formatCurrency(pricing.insurance)}</span>
                   </div>
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-[9px] text-gray-500 uppercase tracking-widest">Other Charges</span>
-                    <span className="text-[10px] text-gray-300">{formatCurrency(pricing.other)}</span>
+                  <div className="flex justify-between items-center mb-3 text-xs text-text-sec font-specs font-bold">
+                    <span>Other Charges</span>
+                    <span>{formatCurrency(pricing.other)}</span>
                   </div>
-                  <div className="flex justify-between items-center pt-3 border-t border-white/10">
-                    <span className="text-[10px] text-accent uppercase tracking-widest font-bold">On-Road</span>
-                    <span className="text-xl font-bold text-accent font-heading">{formatCurrency(pricing.total)}*</span>
+                  <div className="flex justify-between items-center pt-3 border-t border-border">
+                    <span className="text-[10px] text-accent uppercase tracking-widest font-black">On-Road</span>
+                    <span className="text-lg font-specs font-extrabold text-accent">{formatCurrency(pricing.total)}*</span>
                   </div>
                 </div>
   
-                <Link href="/book" className={`w-full py-4 uppercase tracking-[0.2em] text-[10px] font-bold mt-auto inline-block text-center flex items-center justify-center transition-all ${
+                <Link href="/book" className={`w-full py-4 uppercase tracking-[0.2em] text-[10px] font-heading font-black mt-auto inline-block text-center flex items-center justify-center transition-all rounded-xl ${
                   isPopular 
-                  ? 'bg-white hover:bg-gray-200 text-black rounded-full shadow-xl hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]' 
-                  : 'rounded-full border border-white/20 hover:border-white hover:bg-white hover:text-black'
+                  ? 'bg-accent hover:bg-accent-hover text-white shadow-[0_5px_15px_rgba(181,18,27,0.2)]' 
+                  : 'border border-border text-white hover:bg-white hover:text-black hover:border-white'
                 }`}>
                   Book Now
                 </Link>
@@ -107,8 +108,8 @@ export default function Pricing() {
   
         </div>
   
-        <div className="mt-16 text-center">
-          <p className="text-[10px] text-gray-500 uppercase tracking-widest max-w-4xl mx-auto leading-relaxed">
+        <div className="mt-20 text-center">
+          <p className="text-[10px] text-text-sec uppercase tracking-widest max-w-3xl mx-auto leading-loose">
             *Prices shown are indicative and may vary depending on city, dealer location, registration charges, insurance, and applicable taxes. Displayed On-Road price is an estimate for <span className="text-gray-300 font-bold">{city}</span>.
           </p>
         </div>

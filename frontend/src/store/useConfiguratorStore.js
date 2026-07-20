@@ -2,12 +2,12 @@
 import { create } from 'zustand';
 
 export const useConfiguratorStore = create((set) => ({
-  color: '#C41E3A', // Default Jawa Red
+  color: '#C41E3A',   // Default: Jawa Red
   exhaust: 'standard', // 'standard' | 'sport'
-  wheels: 'alloy', // 'alloy' | 'spoke'
-  seat: 'dual', // 'dual' | 'bobber'
+  wheels: 'spoke',    // 'spoke' | 'alloy'  — default to standard (no extra cost)
+  seat: 'dual',       // 'dual' | 'bobber'
   mirrors: 'standard', // 'standard' | 'barend'
-  
+
   setColor: (color) => set({ color }),
   setExhaust: (exhaust) => set({ exhaust }),
   setWheels: (wheels) => set({ wheels }),

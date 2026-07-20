@@ -1,7 +1,7 @@
 // cSpell:ignore framer lucide Rohit Sharma Ananya Vikram Malhotra Aditya Pooja Hegde Kabir Mehta Spiti
 'use client';
 import { useRef } from 'react';
-import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 
 const reviews = [
@@ -81,35 +81,33 @@ export default function CustomerReviews() {
   };
 
   return (
-    <section className="bg-[#030303] py-24 border-t border-white/5 relative z-10" id="reviews">
-      <div className="container mx-auto px-6">
+    <section className="bg-primary py-32 border-t border-border relative z-10" id="reviews">
+      <div className="container mx-auto px-6 max-w-7xl">
         
         {/* Header with Navigation Controls */}
-        <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16 max-w-7xl mx-auto">
-          <div className="max-w-2xl">
-            <h2 className="text-accent font-heading font-semibold tracking-[0.3em] uppercase text-[10px] mb-4 flex items-center gap-4">
-              <span className="w-8 h-[1px] bg-accent"></span> Testimonials <span className="w-8 h-[1px] bg-accent"></span>
-            </h2>
-            <h3 className="text-5xl font-heading font-extrabold text-white uppercase tracking-widest mb-6">
-              Rider Stories
+        <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-20">
+          <div className="max-w-xl">
+            <span className="text-[10px] font-bold text-accent tracking-[0.3em] uppercase block mb-4">TESTIMONIALS</span>
+            <h3 className="text-4xl md:text-5xl font-heading font-black text-white uppercase tracking-tight">
+              RIDER STORIES
             </h3>
-            <p className="text-gray-400 text-lg leading-relaxed font-light">
+            <p className="text-sm md:text-base text-text-sec font-body font-light leading-relaxed mt-4">
               Hear from the members of the Jawa Tribe. Read about their tours, highway cruising, and daily experiences with the legend.
             </p>
           </div>
           
-          {/* Navigation Arrows for Desktop */}
+          {/* Navigation Arrows */}
           <div className="hidden md:flex gap-4">
             <button 
               onClick={() => scroll('left')}
-              className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-white transition-all bg-white/[0.02]"
+              className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-text-sec hover:text-white hover:border-white transition-all bg-white/[0.02]"
               aria-label="Scroll Left"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button 
               onClick={() => scroll('right')}
-              className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-white transition-all bg-white/[0.02]"
+              className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-text-sec hover:text-white hover:border-white transition-all bg-white/[0.02]"
               aria-label="Scroll Right"
             >
               <ChevronRight className="w-5 h-5" />
@@ -118,7 +116,7 @@ export default function CustomerReviews() {
         </div>
 
         {/* Carousel Container */}
-        <div className="relative max-w-7xl mx-auto">
+        <div className="relative">
           <div 
             ref={scrollRef}
             className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-none pb-8"
@@ -129,7 +127,7 @@ export default function CustomerReviews() {
                 key={review.id}
                 className="w-[85vw] sm:w-[50vw] lg:w-[30vw] min-w-[280px] sm:min-w-[340px] snap-start shrink-0"
               >
-                <div className="glass-1 p-8 rounded-3xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-500 flex flex-col justify-between h-full relative overflow-hidden group">
+                <div className="bg-surface border border-border p-8 rounded-3xl hover:border-accent/20 transition-all duration-500 flex flex-col justify-between h-full relative overflow-hidden group">
                   
                   {/* Decorative background quote */}
                   <Quote className="absolute right-6 top-6 w-16 h-16 text-white/[0.02] transform rotate-180 pointer-events-none group-hover:text-accent/[0.03] transition-colors duration-500" />
@@ -138,28 +136,30 @@ export default function CustomerReviews() {
                     {/* Rating stars */}
                     <div className="flex gap-1 mb-6">
                       {[...Array(review.rating)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-accent text-accent" />
+                        <Star key={i} className="w-4 h-4 fill-accent text-accent border-none" />
                       ))}
                     </div>
 
                     {/* Review text */}
-                    <p className="text-gray-300 text-sm font-light leading-relaxed mb-8 italic">
-                      "{review.text}"
+                    <p className="text-gray-300 text-sm font-body font-light leading-relaxed mb-8 italic">
+                      &ldquo;{review.text}&rdquo;
                     </p>
                   </div>
 
                   {/* Customer details */}
-                  <div className="flex items-center gap-4 border-t border-white/5 pt-6 mt-auto">
-                    <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/10">
-                      <img 
-                        src={review.avatar} 
+                  <div className="flex items-center gap-4 border-t border-border pt-6 mt-auto">
+                    <div className="relative w-12 h-12 rounded-full overflow-hidden border border-border">
+                      <Image
+                        src={review.avatar}
                         alt={review.name}
-                        className="object-cover w-full h-full"
+                        fill
+                        sizes="48px"
+                        className="object-cover"
                       />
                     </div>
                     <div>
-                      <h4 className="font-heading font-bold text-white text-sm uppercase tracking-wider">{review.name}</h4>
-                      <p className="text-[10px] text-accent font-semibold uppercase tracking-widest">{review.model}</p>
+                      <h4 className="font-heading font-extrabold text-white text-sm uppercase tracking-wider">{review.name}</h4>
+                      <p className="text-[10px] text-accent font-specs font-bold uppercase tracking-widest">{review.model}</p>
                     </div>
                   </div>
 

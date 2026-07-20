@@ -1,16 +1,83 @@
-# React + Vite
+# Jawa Motorcycles — Digital Experience
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Production-ready Next.js frontend with an Express lead-capture API for the Jawa / Yezdi motorcycle lineup.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Layer | Tech |
+|-------|------|
+| Frontend | Next.js 14 (App Router), React 18, Tailwind CSS, Framer Motion, Zustand |
+| Backend | Express, Mongoose, Nodemailer |
+| Data | Local JS modules (`src/data/*`) + MongoDB for leads |
 
-## React Compiler
+## Project structure
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```
+Jawa-42/
+├── frontend/          # Next.js app
+│   ├── public/        # Static assets (logo)
+│   └── src/
+│       ├── app/       # Routes & API
+│       ├── components/
+│       ├── data/      # Models, dealers, cities, competitors
+│       ├── lib/       # Shared helpers (motion, validation)
+│       ├── store/     # Zustand stores
+│       └── utils/     # Pricing, email
+└── backend/           # Express lead API
+```
 
-## Expanding the ESLint configuration
+## Setup
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+```
+
+### Environment
+
+Copy examples and fill in real values (never commit secrets):
+
+```bash
+cp frontend/.env.example frontend/.env.local
+cp backend/.env.example backend/.env
+```
+
+Required:
+
+- `MONGODB_URI` — MongoDB Atlas / local connection string
+- `BACKEND_URL` — Express URL (default `http://localhost:5000`)
+- Email credentials for booking confirmations (see backend `.env.example`)
+
+### Develop
+
+```bash
+npm run dev
+```
+
+- Frontend: http://localhost:3000  
+- Backend: http://localhost:5000  
+
+### Build
+
+```bash
+npm run build
+npm start
+```
+
+## Routes
+
+| Path | Purpose |
+|------|---------|
+| `/` | Home |
+| `/models` | Full model range |
+| `/gallery` | Visual gallery |
+| `/compare` | Competitor comparison |
+| `/configurator` | Build & enquire |
+| `/pricing` | On-road pricing + EMI |
+| `/specs` | Technical specifications |
+| `/dealers` | Dealer locator |
+| `/book` | Test ride booking |
+
+## Notes
+
+- Product imagery currently loads from configured CDN hosts (`next.config.mjs`). Prefer local assets in `public/` for production when available.
+- Rotate any MongoDB credentials that were previously committed to source control.

@@ -1,9 +1,9 @@
 // cSpell:ignore framer, lucide
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { motorcycleModels, formatCurrency } from '@/data/models';
-import { HelpCircle, RefreshCw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 
 export default function EMICalculator() {
   const [selectedModelId, setSelectedModelId] = useState(motorcycleModels[0]?.id || '');
@@ -13,19 +13,20 @@ export default function EMICalculator() {
   const [interestRate, setInterestRate] = useState(9.5);
   const [tenure, setTenure] = useState(3); // in years
 
-  // Get active model and its variants
-  const activeModel = motorcycleModels.find(m => m.id === selectedModelId);
-  const variants = activeModel?.variants || [];
+  // Get active model and its variants — memoised so array reference stays stable
+  const activeModel = useMemo(
+    () => motorcycleModels.find((m) => m.id === selectedModelId),
+    [selectedModelId],
+  );
+  const variants = useMemo(() => activeModel?.variants || [], [activeModel]);
 
   // Update variant list and prices when model changes
   useEffect(() => {
     if (activeModel) {
       if (variants.length > 0) {
-        // Default to first variant (or popular one)
-        const popular = variants.find(v => v.isPopular) || variants[0];
+        const popular = variants.find((v) => v.isPopular) || variants[0];
         setSelectedVariantId(popular.id);
         setExShowroomPrice(popular.price);
-        // Default down payment to 20%
         setDownPayment(Math.round(popular.price * 0.2));
       } else {
         setSelectedVariantId('');
@@ -33,12 +34,12 @@ export default function EMICalculator() {
         setDownPayment(Math.round(activeModel.baseExShowroomPrice * 0.2));
       }
     }
-  }, [selectedModelId]);
+  }, [selectedModelId, activeModel, variants]);
 
   // Update price when variant changes
   const handleVariantChange = (variantId) => {
     setSelectedVariantId(variantId);
-    const variant = variants.find(v => v.id === variantId);
+    const variant = variants.find((v) => v.id === variantId);
     if (variant) {
       setExShowroomPrice(variant.price);
       setDownPayment(Math.round(variant.price * 0.2));

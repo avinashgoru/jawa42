@@ -1,5 +1,6 @@
 'use client';
-import { useState, useEffect } from 'react';
+
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocationStore } from '@/store/useLocationStore';
 import { dealers } from '@/data/dealers';
@@ -7,40 +8,39 @@ import { motorcycleModels } from '@/data/models';
 import SearchableCitySelect from '@/components/SearchableCitySelect';
 import { MapPin, Calendar, User, Phone, Mail, ArrowRight, ArrowLeft, CheckCircle } from 'lucide-react';
 import Image from 'next/image';
+import { isValidEmail, isValidPhone, isNonEmpty } from '@/lib/validation';
+import { slideStep } from '@/lib/motion';
 
-const steps = [
+const STEPS = [
   { id: 1, title: 'Location' },
   { id: 2, title: 'Model & Date' },
-  { id: 3, title: 'Details' }
+  { id: 3, title: 'Details' },
 ];
 
 export default function BookTestRide() {
   const { city, setCity } = useLocationStore();
   const [step, setStep] = useState(1);
-  const [status, setStatus] = useState('idle'); // idle, loading, success, error
+  const [status, setStatus] = useState('idle');
   const [errorMessage, setErrorMessage] = useState('');
-
-  // Form State
   const [selectedDealerId, setSelectedDealerId] = useState('');
   const [selectedModelId, setSelectedModelId] = useState('jawa-42');
   const [selectedDate, setSelectedDate] = useState('');
   const [formData, setFormData] = useState({ name: '', phone: '', email: '' });
 
-  // Filtered Dealers
-  const [filteredDealers, setFilteredDealers] = useState([]);
+  const filteredDealers = useMemo(() => {
+    if (!city) return [];
+    return dealers.filter((d) => d.city.toLowerCase() === city.toLowerCase());
+  }, [city]);
+
   useEffect(() => {
-    if (city) {
-      const dealersInCity = dealers.filter(d => d.city.toLowerCase() === city.toLowerCase());
-      setFilteredDealers(dealersInCity);
-      // Reset dealer selection if city changes and old dealer is not in new city
-      if (!dealersInCity.find(d => d.id === selectedDealerId)) {
-        setSelectedDealerId('');
-      }
-    } else {
-      setFilteredDealers([]);
+    if (!filteredDealers.find((d) => d.id === selectedDealerId)) {
       setSelectedDealerId('');
     }
-  }, [city, selectedDealerId]);
+  }, [filteredDealers, selectedDealerId]);
+
+  const selectedDealer = dealers.find((d) => d.id === selectedDealerId);
+  const selectedModel = motorcycleModels.find((m) => m.id === selectedModelId);
+  const today = useMemo(() => new Date().toISOString().split('T')[0], []);
 
   const handleNext = () => {
     setErrorMessage('');
@@ -52,29 +52,25 @@ export default function BookTestRide() {
       setErrorMessage('Please select a motorcycle and a preferred date.');
       return;
     }
-    setStep(s => s + 1);
+    setStep((s) => s + 1);
   };
 
   const handleBack = () => {
     setErrorMessage('');
-    setStep(s => s - 1);
+    setStep((s) => s - 1);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.phone.trim() || !formData.email.trim()) {
+    if (!isNonEmpty(formData.name) || !isNonEmpty(formData.phone) || !isNonEmpty(formData.email)) {
       setErrorMessage('Please fill in your name, email, and phone number.');
       return;
     }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setErrorMessage('Please enter a valid email address (e.g. yourname@gmail.com).');
+    if (!isValidEmail(formData.email)) {
+      setErrorMessage('Please enter a valid email address.');
       return;
     }
-
-    const phoneRegex = /^\+?[0-9\s-]{10,15}$/;
-    if (!phoneRegex.test(formData.phone)) {
+    if (!isValidPhone(formData.phone)) {
       setErrorMessage('Please enter a valid phone number.');
       return;
     }
@@ -83,30 +79,21 @@ export default function BookTestRide() {
     setErrorMessage('');
 
     try {
-      const selectedDealer = dealers.find(d => d.id === selectedDealerId);
-      const selectedModel = motorcycleModels.find(m => m.id === selectedModelId);
-
-      const payload = {
-        ...formData,
-        city,
-        dealer: selectedDealer?.name,
-        model: selectedModel?.name,
-        date: selectedDate,
-        source: 'Book Test Ride Multi-Step'
-      };
-
       const response = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          ...formData,
+          city,
+          dealer: selectedDealer?.name,
+          model: selectedModel?.name,
+          date: selectedDate,
+          source: 'Book Test Ride Multi-Step',
+        }),
       });
 
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to submit request.');
-      }
-
+      if (!response.ok) throw new Error(data.error || 'Failed to submit request.');
       setStatus('success');
     } catch (error) {
       console.error('Submission error:', error);
@@ -119,84 +106,109 @@ export default function BookTestRide() {
     switch (step) {
       case 1:
         return (
-          <motion.div
-            key="step1"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="space-y-6"
-          >
-            <div>
-              <label className="block text-xs uppercase tracking-widest text-gray-400 mb-2">Select Your City *</label>
-              <SearchableCitySelect value={city} onChange={setCity} />
-            </div>
+          <motion.div key="step1" {...slideStep} className="space-y-6">
+            <SearchableCitySelect
+              id="book-city"
+              label="Select your city *"
+              value={city}
+              onChange={setCity}
+            />
 
             {city && (
-              <div>
-                <label className="block text-xs uppercase tracking-widest text-gray-400 mb-4 mt-8">Select Dealership *</label>
+              <fieldset>
+                <legend className="block text-[10px] font-specs font-bold uppercase tracking-widest text-text-sec mb-4 mt-8">
+                  Select dealership *
+                </legend>
                 {filteredDealers.length > 0 ? (
-                  <div className="grid gap-4 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
-                    {filteredDealers.map(dealer => (
-                      <div 
-                        key={dealer.id}
-                        onClick={() => setSelectedDealerId(dealer.id)}
-                        className={`p-4 border rounded cursor-pointer transition-colors ${selectedDealerId === dealer.id ? 'border-accent bg-accent/10' : 'border-white/10 bg-black/50 hover:border-white/30'}`}
-                      >
-                        <h4 className={`font-bold mb-1 ${selectedDealerId === dealer.id ? 'text-accent' : 'text-white'}`}>{dealer.name}</h4>
-                        <p className="text-xs text-gray-400 mb-2">{dealer.address}</p>
-                        <div className="flex gap-4 text-xs text-gray-500">
-                          <span className="flex items-center gap-1"><MapPin className="w-3 h-3"/> {dealer.city}</span>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="grid gap-4 max-h-[300px] overflow-y-auto custom-scrollbar pr-2" role="radiogroup" aria-label="Dealerships">
+                    {filteredDealers.map((dealer) => {
+                      const selected = selectedDealerId === dealer.id;
+                      return (
+                        <button
+                          key={dealer.id}
+                          type="button"
+                          role="radio"
+                          aria-checked={selected}
+                          onClick={() => setSelectedDealerId(dealer.id)}
+                          className={`p-5 border rounded-2xl text-left transition-colors ${
+                            selected
+                              ? 'border-accent bg-accent/5'
+                              : 'border-border bg-surface hover:border-text-sec/40'
+                          }`}
+                        >
+                          <h3 className={`font-heading font-bold text-sm mb-2 ${selected ? 'text-accent' : 'text-white'}`}>
+                            {dealer.name}
+                          </h3>
+                          <p className="text-xs text-text-sec leading-relaxed mb-3">{dealer.address}</p>
+                          <span className="flex items-center gap-1.5 font-specs font-bold text-xs text-text-sec">
+                            <MapPin className="w-3.5 h-3.5 text-accent" aria-hidden /> {dealer.city}
+                          </span>
+                        </button>
+                      );
+                    })}
                   </div>
                 ) : (
-                  <div className="p-4 border border-dashed border-white/20 rounded text-center text-gray-500 text-sm">
+                  <div className="p-8 border border-dashed border-border rounded-2xl text-center text-text-sec text-sm font-light">
                     No dealerships found in {city}.
                   </div>
                 )}
-              </div>
+              </fieldset>
             )}
           </motion.div>
         );
-      
+
       case 2:
         return (
-          <motion.div
-            key="step2"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="space-y-6"
-          >
-            <div>
-              <label className="block text-xs uppercase tracking-widest text-gray-400 mb-4">Select Motorcycle *</label>
-              <div className="grid grid-cols-2 gap-4">
-                {motorcycleModels.map(model => (
-                  <div 
-                    key={model.id}
-                    onClick={() => setSelectedModelId(model.id)}
-                    className={`p-3 border rounded cursor-pointer transition-all ${selectedModelId === model.id ? 'border-accent bg-accent/5' : 'border-white/10 bg-black/50 hover:border-white/30'} flex flex-col items-center text-center`}
-                  >
-                    <div className="relative w-full h-16 mb-2">
-                      <Image src={model.image} alt={model.name} fill className="object-contain" />
-                    </div>
-                    <span className={`text-xs font-bold uppercase ${selectedModelId === model.id ? 'text-accent' : 'text-gray-300'}`}>{model.name}</span>
-                  </div>
-                ))}
+          <motion.div key="step2" {...slideStep} className="space-y-6">
+            <fieldset>
+              <legend className="block text-[10px] font-specs font-bold uppercase tracking-widest text-text-sec mb-4">
+                Select motorcycle *
+              </legend>
+              <div className="grid grid-cols-2 gap-4" role="radiogroup" aria-label="Motorcycle models">
+                {motorcycleModels.map((model) => {
+                  const selected = selectedModelId === model.id;
+                  return (
+                    <button
+                      key={model.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={selected}
+                      onClick={() => setSelectedModelId(model.id)}
+                      className={`p-4 border rounded-2xl transition-all flex flex-col items-center text-center ${
+                        selected
+                          ? 'border-accent bg-accent/5'
+                          : 'border-border bg-surface hover:border-text-sec/40'
+                      }`}
+                    >
+                      <div className="relative w-full h-16 mb-3">
+                        <Image src={model.image} alt="" fill className="object-contain" />
+                      </div>
+                      <span
+                        className={`text-[10px] font-heading font-extrabold uppercase tracking-wider ${
+                          selected ? 'text-accent' : 'text-white'
+                        }`}
+                      >
+                        {model.name}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
-            </div>
+            </fieldset>
 
             <div className="pt-4">
-              <label className="block text-xs uppercase tracking-widest text-gray-400 mb-2">Preferred Date *</label>
+              <label htmlFor="book-date" className="block text-[10px] font-specs font-bold uppercase tracking-widest text-text-sec mb-3">
+                Preferred date *
+              </label>
               <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
-                <input 
-                  type="date" 
+                <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" aria-hidden />
+                <input
+                  id="book-date"
+                  type="date"
                   value={selectedDate}
-                  min={new Date().toISOString().split('T')[0]}
+                  min={today}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full bg-black/50 border border-white/10 rounded p-3 pl-10 text-white focus:outline-none focus:border-accent transition-colors [color-scheme:dark]"
+                  className="w-full bg-surface border border-border rounded-xl p-4 pl-12 text-white focus:outline-none focus:border-accent transition-colors [color-scheme:dark] text-sm"
                 />
               </div>
             </div>
@@ -204,180 +216,175 @@ export default function BookTestRide() {
         );
 
       case 3:
-        const sDealer = dealers.find(d => d.id === selectedDealerId);
-        const sModel = motorcycleModels.find(m => m.id === selectedModelId);
         return (
-          <motion.div
-            key="step3"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="space-y-6"
-          >
-            {/* Summary Box */}
-            <div className="bg-white/5 border border-white/10 rounded p-4 mb-6">
-              <h4 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4 border-b border-white/10 pb-2">Booking Summary</h4>
-              <div className="space-y-2 text-sm text-gray-300">
-                <p className="flex justify-between"><span>Motorcycle:</span> <span className="font-bold text-white">{sModel?.name}</span></p>
-                <p className="flex justify-between"><span>Dealership:</span> <span className="font-bold text-white text-right ml-4">{sDealer?.name}</span></p>
-                <p className="flex justify-between"><span>Date:</span> <span className="font-bold text-white">{selectedDate}</span></p>
-              </div>
+          <motion.div key="step3" {...slideStep} className="space-y-6">
+            <div className="bg-surface border border-border rounded-2xl p-5 mb-8">
+              <h3 className="text-[10px] font-specs font-extrabold uppercase tracking-widest text-text-sec mb-4 border-b border-border pb-3">
+                Booking Summary
+              </h3>
+              <dl className="space-y-3 text-sm font-body font-light text-text-sec">
+                <div className="flex justify-between">
+                  <dt>Motorcycle</dt>
+                  <dd className="font-heading font-bold text-white uppercase">{selectedModel?.name}</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt>Dealership</dt>
+                  <dd className="font-heading font-bold text-white text-right ml-4">{selectedDealer?.name}</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt>Date</dt>
+                  <dd className="font-specs font-bold text-white">{selectedDate}</dd>
+                </div>
+              </dl>
             </div>
 
-            <div>
-              <label className="block text-xs uppercase tracking-widest text-gray-400 mb-2">Full Name *</label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                <input 
-                  type="text" 
-                  name="name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className="w-full bg-black/50 border border-white/10 rounded p-3 pl-10 text-white focus:outline-none focus:border-accent transition-colors" 
-                  placeholder="John Doe" 
-                />
+            {[
+              { id: 'book-name', name: 'name', label: 'Full name *', type: 'text', Icon: User, placeholder: 'John Doe', autoComplete: 'name' },
+              { id: 'book-email', name: 'email', label: 'Email address *', type: 'email', Icon: Mail, placeholder: 'yourname@gmail.com', autoComplete: 'email' },
+              { id: 'book-phone', name: 'phone', label: 'Mobile number *', type: 'tel', Icon: Phone, placeholder: '+91 98765 43210', autoComplete: 'tel' },
+            ].map(({ id, name, label, type, Icon, placeholder, autoComplete }) => (
+              <div key={id}>
+                <label htmlFor={id} className="block text-[10px] font-specs font-bold uppercase tracking-widest text-text-sec mb-3">
+                  {label}
+                </label>
+                <div className="relative">
+                  <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" aria-hidden />
+                  <input
+                    id={id}
+                    type={type}
+                    name={name}
+                    autoComplete={autoComplete}
+                    value={formData[name]}
+                    onChange={(e) => setFormData({ ...formData, [name]: e.target.value })}
+                    className="w-full bg-surface border border-border rounded-xl p-4 pl-12 text-white focus:outline-none focus:border-accent transition-colors text-sm"
+                    placeholder={placeholder}
+                  />
+                </div>
               </div>
-            </div>
-            <div>
-              <label className="block text-xs uppercase tracking-widest text-gray-400 mb-2">Email Address (Gmail) *</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                <input 
-                  type="email" 
-                  name="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  className="w-full bg-black/50 border border-white/10 rounded p-3 pl-10 text-white focus:outline-none focus:border-accent transition-colors" 
-                  placeholder="yourname@gmail.com" 
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-xs uppercase tracking-widest text-gray-400 mb-2">Mobile Number *</label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                <input 
-                  type="tel" 
-                  name="phone"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  className="w-full bg-black/50 border border-white/10 rounded p-3 pl-10 text-white focus:outline-none focus:border-accent transition-colors" 
-                  placeholder="+91 98765 43210" 
-                />
-              </div>
-            </div>
+            ))}
           </motion.div>
         );
-      
+
       default:
         return null;
     }
   };
 
   return (
-    <div className="pt-32 pb-20 min-h-screen container mx-auto px-6 flex flex-col items-center">
-      
-      <div className="text-center mb-12 max-w-2xl mx-auto">
-        <h1 className="text-4xl md:text-5xl font-heading font-extrabold uppercase tracking-widest mb-4">
-          Book a <span className="text-accent">Test Ride</span>
+    <div className="pt-40 pb-32 min-h-screen bg-primary flex flex-col items-center">
+      <div className="text-center mb-16 max-w-2xl mx-auto px-6">
+        <span className="text-[10px] font-bold text-accent tracking-[0.3em] uppercase block mb-4">Reserve</span>
+        <h1 className="text-4xl md:text-5xl font-heading font-black uppercase tracking-tight text-white mb-4">
+          Book a Test Ride
         </h1>
-        <p className="text-gray-400">
+        <p className="text-sm md:text-base text-text-sec font-body font-light max-w-md mx-auto leading-relaxed">
           Feel the refined power of the Panther engine. Book your slot in three easy steps.
         </p>
       </div>
 
-      <div className="w-full max-w-xl">
+      <div className="w-full max-w-xl px-6">
         <AnimatePresence mode="wait">
           {status === 'success' ? (
-            <motion.div 
+            <motion.div
               key="success"
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="glass-2 p-10 rounded-2xl border border-accent flex flex-col items-center text-center gap-6 shadow-[0_0_50px_rgba(196,30,58,0.2)]"
+              className="bg-surface p-10 rounded-3xl border border-accent/20 flex flex-col items-center text-center gap-6 shadow-[0_10px_40px_rgba(181,18,27,0.1)]"
+              role="status"
             >
-              <div className="w-20 h-20 bg-accent rounded-full flex items-center justify-center text-white mb-2">
-                <CheckCircle className="w-10 h-10" />
+              <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center text-white mb-2" aria-hidden>
+                <CheckCircle className="w-8 h-8" />
               </div>
-              <h2 className="text-3xl font-heading font-bold uppercase tracking-widest text-white">Ride Confirmed!</h2>
-              <div className="text-gray-400 text-sm leading-relaxed max-w-md space-y-4">
-                <p>Thank you, <span className="text-white font-bold">{formData.name}</span>. Your test ride for the <span className="text-white font-bold">{motorcycleModels.find(m => m.id === selectedModelId)?.name}</span> has been scheduled.</p>
-                
-                <div className="bg-black/30 border border-white/10 p-4 rounded text-left mt-4">
-                  <p className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Dealership Contact</p>
-                  <p className="text-white font-bold">{dealers.find(d => d.id === selectedDealerId)?.name}</p>
-                  <p className="text-xs mt-1">{dealers.find(d => d.id === selectedDealerId)?.address}</p>
-                  <p className="text-xs text-accent mt-2 font-bold">{dealers.find(d => d.id === selectedDealerId)?.phone}</p>
+              <h2 className="text-2xl font-heading font-extrabold uppercase text-white">Ride Confirmed!</h2>
+              <div className="text-text-sec font-body font-light text-sm leading-relaxed max-w-md space-y-4">
+                <p>
+                  Thank you, <span className="text-white font-bold">{formData.name}</span>. Your test ride for the{' '}
+                  <span className="text-white font-bold">{selectedModel?.name}</span> has been scheduled.
+                </p>
+                <div className="bg-primary border border-border p-5 rounded-2xl text-left mt-4">
+                  <p className="text-[9px] font-specs font-bold uppercase tracking-widest text-text-sec mb-2">
+                    Dealership Contact
+                  </p>
+                  <p className="text-white font-heading font-bold text-sm">{selectedDealer?.name}</p>
+                  <p className="text-xs text-text-sec leading-relaxed mt-1">{selectedDealer?.address}</p>
+                  <p className="text-xs text-accent font-specs font-bold mt-3">{selectedDealer?.phone}</p>
                 </div>
-                
                 <p>A Jawa representative will contact you shortly to confirm the exact timing for {selectedDate}.</p>
               </div>
-              <button 
+              <button
+                type="button"
                 onClick={() => {
                   setStatus('idle');
                   setStep(1);
                   setFormData({ name: '', phone: '', email: '' });
                 }}
-                className="mt-6 border border-white/20 hover:bg-white/10 px-8 py-3 rounded text-xs font-bold uppercase tracking-widest transition-colors"
+                className="mt-6 bg-accent hover:bg-accent-hover text-white px-8 py-3.5 rounded-xl text-xs font-heading font-black uppercase tracking-[0.2em] transition-colors"
               >
                 Book Another
               </button>
             </motion.div>
           ) : (
-            <div className="glass p-8 rounded-2xl border border-white/10 shadow-2xl relative overflow-hidden">
-              
-              {/* Progress Bar */}
-              <div className="flex justify-between items-center mb-8 relative">
-                <div className="absolute top-1/2 left-0 right-0 h-[2px] bg-white/10 -z-10 -translate-y-1/2"></div>
-                {steps.map(s => (
-                  <div key={s.id} className="flex flex-col items-center gap-2 bg-[#0a0a0a] px-2">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${step >= s.id ? 'bg-accent text-white shadow-[0_0_15px_rgba(196,30,58,0.5)]' : 'bg-white/10 text-gray-500'}`}>
+            <div className="bg-surface p-8 rounded-3xl border border-border shadow-2xl relative overflow-hidden">
+              <div className="flex justify-between items-center mb-10 relative" aria-label={`Step ${step} of ${STEPS.length}`}>
+                <div className="absolute top-1/2 left-0 right-0 h-[1.5px] bg-border -z-10 -translate-y-1/2" aria-hidden />
+                {STEPS.map((s) => (
+                  <div key={s.id} className="flex flex-col items-center gap-2 bg-surface px-3">
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-specs font-bold transition-all ${
+                        step >= s.id
+                          ? 'bg-accent text-white shadow-[0_0_15px_rgba(181,18,27,0.3)]'
+                          : 'bg-primary border border-border text-gray-500'
+                      }`}
+                      aria-current={step === s.id ? 'step' : undefined}
+                    >
                       {s.id}
                     </div>
-                    <span className={`text-[10px] uppercase tracking-widest font-bold ${step >= s.id ? 'text-white' : 'text-gray-500'}`}>{s.title}</span>
+                    <span className={`text-[9px] font-specs font-bold uppercase tracking-widest ${step >= s.id ? 'text-white' : 'text-gray-500'}`}>
+                      {s.title}
+                    </span>
                   </div>
                 ))}
               </div>
 
               {errorMessage && (
-                <div className="bg-red-900/30 border border-red-500/50 text-red-200 p-3 rounded text-xs mb-6 text-center">
+                <div className="bg-accent/10 border border-accent/20 text-red-200 p-4 rounded-xl text-xs mb-6 text-center font-body font-medium" role="alert">
                   {errorMessage}
                 </div>
               )}
 
-              {/* Step Content */}
               <div className="min-h-[350px]">
-                <AnimatePresence mode="wait">
-                  {renderStepContent()}
-                </AnimatePresence>
+                <AnimatePresence mode="wait">{renderStepContent()}</AnimatePresence>
               </div>
 
-              {/* Navigation */}
-              <div className="flex gap-4 mt-8 pt-6 border-t border-white/10">
+              <div className="flex gap-4 mt-8 pt-6 border-t border-border">
                 {step > 1 && (
-                  <button 
+                  <button
+                    type="button"
                     onClick={handleBack}
                     disabled={status === 'loading'}
-                    className="flex-1 py-3 border border-white/20 hover:bg-white/5 transition-colors rounded uppercase tracking-widest font-bold text-xs disabled:opacity-50 flex justify-center items-center gap-2"
+                    className="flex-1 py-4 border border-border hover:bg-white/5 transition-colors rounded-xl uppercase tracking-widest font-heading font-black text-[10px] disabled:opacity-50 flex justify-center items-center gap-2 text-white"
                   >
-                    <ArrowLeft className="w-4 h-4" /> Back
+                    <ArrowLeft className="w-3.5 h-3.5" aria-hidden /> Back
                   </button>
                 )}
-                
+
                 {step < 3 ? (
-                  <button 
+                  <button
+                    type="button"
                     onClick={handleNext}
-                    className="flex-[2] py-3 bg-accent hover:bg-accent-hover transition-colors rounded uppercase tracking-widest font-bold text-xs flex justify-center items-center gap-2"
+                    className="flex-[2] py-4 bg-accent hover:bg-accent-hover text-white transition-colors rounded-xl uppercase tracking-widest font-heading font-black text-[10px] flex justify-center items-center gap-2 shadow-[0_5px_15px_rgba(181,18,27,0.2)]"
                   >
-                    Next Step <ArrowRight className="w-4 h-4" />
+                    Next Step <ArrowRight className="w-3.5 h-3.5" aria-hidden />
                   </button>
                 ) : (
-                  <button 
+                  <button
+                    type="button"
                     onClick={handleSubmit}
                     disabled={status === 'loading'}
-                    className="flex-[2] py-3 bg-accent hover:bg-accent-hover transition-colors rounded uppercase tracking-widest font-bold text-xs disabled:opacity-70 flex justify-center items-center gap-2"
+                    className="flex-[2] py-4 bg-accent hover:bg-accent-hover text-white transition-colors rounded-xl uppercase tracking-widest font-heading font-black text-[10px] disabled:opacity-70 flex justify-center items-center gap-2 shadow-[0_5px_15px_rgba(181,18,27,0.2)]"
                   >
                     {status === 'loading' ? (
-                      <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                      <span className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" aria-label="Submitting" />
                     ) : (
                       'Confirm Booking'
                     )}
@@ -388,7 +395,6 @@ export default function BookTestRide() {
           )}
         </AnimatePresence>
       </div>
-
     </div>
   );
 }

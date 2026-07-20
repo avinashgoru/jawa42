@@ -1,6 +1,7 @@
 export const metadata = {
-  title: 'Jawa Motorcycles Cinematic Gallery | Showcase',
-  description: 'Explore high-resolution cinematic photos and close-ups of Jawa and Yezdi motorcycles, highlighting heritage design and craftsmanship.',
+  title: 'Jawa Motorcycles Gallery | Official Showcase',
+  description:
+    'Explore high-resolution official images of Jawa 42, Jawa 42 Bobber, Jawa Perak, Jawa 350, and Yezdi motorcycles — design details, profiles, and heritage branding.',
 };
 
 export default function GalleryLayout({ children }) {

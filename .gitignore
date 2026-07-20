@@ -11,9 +11,12 @@ node_modules
 dist
 dist-ssr
 *.local
+
+# Environment files — never commit real secrets
 .env
 .env.*
 !.env.example
+frontend/.env.local
 
 # Editor directories and files
 .vscode/*
@@ -25,5 +28,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-.next
+
+# Build output
+frontend/.next
+frontend/dist
 .vite
