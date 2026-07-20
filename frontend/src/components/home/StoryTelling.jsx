@@ -30,7 +30,7 @@ export default function StoryTelling() {
             <span className="text-[#B3B3B3]">WRITE THEIR OWN HISTORY.</span>
           </h2>
           <p className="text-sm md:text-base text-text-sec font-body font-light leading-relaxed max-w-xl mx-auto">
-            Experience a ride that commands respect. The Jawa 42 doesn&apos;t just transport you; it transforms every journey into a cinematic escape.
+            Experience a ride that commands respect. The Jawa 42 does not just transport you; it transforms every journey into a cinematic escape.
           </p>
         </motion.div>
       </div>

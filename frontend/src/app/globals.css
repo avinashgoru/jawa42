@@ -1,3 +1,4 @@
+/* cSpell:ignore Satoshi */
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap');
 
 @tailwind base;
@@ -47,11 +48,6 @@ h6 {
   background: var(--color-accent);
 }
 
-/* Named utility for components that need a styled scrollbar */
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border) transparent;
-}
 
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;

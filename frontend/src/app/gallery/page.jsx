@@ -1,4 +1,4 @@
-// cSpell:ignore Jawa, Yezdi, Perak, Bobber, aeplcdn
+// cSpell:ignore Jawa, Yezdi, Perak, Bobber, aeplcdn, imgd
 'use client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
